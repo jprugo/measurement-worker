@@ -2,3 +2,4 @@ requests
 schedule
 fastapi
 uvicorn
+fastapi_utilities

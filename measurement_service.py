@@ -59,9 +59,9 @@ class ResistanceDataTransformer:
     def transform_data(self, data):
         """Transform data to resistance format."""
         return [
-            {"query": f"mutation {{ addResistance(data: {{ value: {data['Resistencia'][0]}, type: 1 }}) {{ value }} }}"},
-            {"query": f"mutation {{ addResistance(data: {{ value: {data['Resistencia'][1]}, type: 2 }}) {{ value }} }}"},
-            {"query": f"mutation {{ addResistance(data: {{ value: {data['Resistencia'][2]}, type: 3 }}) {{ value }} }}"}
+            {"query": f"mutation {{ addResistance(data: {{ value: {data['Resistencia'][0]}, type: \"1\" }}) {{ value }} }}"},
+            {"query": f"mutation {{ addResistance(data: {{ value: {data['Resistencia'][1]}, type: \"2\" }}) {{ value }} }}"},
+            {"query": f"mutation {{ addResistance(data: {{ value: {data['Resistencia'][2]}, type: \"3\" }}) {{ value }} }}"}
         ]
 
 def get_measure_data(type: str):
