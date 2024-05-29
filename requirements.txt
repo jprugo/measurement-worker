@@ -3,3 +3,5 @@ schedule
 fastapi
 uvicorn
 fastapi_utilities
+apscheduler
+pygame
