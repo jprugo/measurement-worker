@@ -3,3 +3,9 @@ schedule
 fastapi
 uvicorn
 fastapi_utilities
+apscheduler
+pygame
+pytest
+httpx
+numpy
+pytest-asyncio
