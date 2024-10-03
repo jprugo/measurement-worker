@@ -5,5 +5,5 @@ pip install -r requirements.txt
 
 ## Run the project
 ```bash
-uvicorn main:app --port 8001
+uvicorn shared_kernel.infra.fastapi.main:app --reload
 ```

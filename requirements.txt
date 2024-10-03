@@ -9,3 +9,8 @@ pytest
 httpx
 numpy
 pytest-asyncio
+dependency_injector
+sqlalchemy_utils
+pydantic-settings
+strawberry-graphql[fastapi]
+psutil
