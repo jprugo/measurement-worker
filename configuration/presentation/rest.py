@@ -18,7 +18,7 @@ from configuration.application.use_case import (
 )
 from configuration.domain.model.aggregate import Configuration
 from shared_kernel.infra.container import AppContainer
-
+import pygame
 
 router = APIRouter(prefix="/configuration", tags=['configuration'])
 
@@ -57,6 +57,17 @@ def setup(
     configuration_query: ConfigurationQueryUseCase = Depends(Provide[AppContainer.configuration.query]),
 ) -> SetUpResponse:
     return SetUpResponse(
-        voltaje = configuration_query.get_configuration(request = GetConfigurationRequest(name='isolationVoltage')),
-        alarma= configuration_query.get_configuration(request = GetConfigurationRequest(name='isolationAlarmValue'))
+        voltaje = configuration_query.get_configuration(request = GetConfigurationRequest(name='isolationVoltage'))
     )
+
+
+@router.get("/emitSound")
+@inject
+def setup(
+    configuration_query: ConfigurationQueryUseCase = Depends(Provide[AppContainer.configuration.query]),
+):
+    sound_path = configuration_query.get_configuration(request = GetConfigurationRequest(name='soundPath'))
+    pygame.mixer.init()
+    pygame.mixer.music.load(sound_path)
+    pygame.mixer.music.play()
+    return {}
