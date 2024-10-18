@@ -134,10 +134,14 @@ class WorkerService:
     
 
     def _reproduce(self, sound_path: str):
-        #pygame.mixer.init()
-        #pygame.mixer.music.load(sound_path)
-        #pygame.mixer.music.play()
-        print(f'Playing {sound_path}')
+        try:
+            print(f'Playing {sound_path}')
+            pygame.mixer.init()
+            pygame.mixer.music.load(sound_path)
+            pygame.mixer.music.play()
+        except:
+            print("Error while playing sound")
+            
 
 
     def _save_alarm(self, alarm_definition: AlarmDefinition, measure_value: float):
