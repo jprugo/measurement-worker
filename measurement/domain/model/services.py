@@ -12,7 +12,7 @@ from datetime import datetime
 class CreateMeasurementRequest(BaseModel):
     value: float
     measure_type: MeasureType
-    detail: str
+    detail: Optional[str] = None
 
 
 class GetMeasurementRequest(BaseModel):
@@ -21,7 +21,7 @@ class GetMeasurementRequest(BaseModel):
     end_date: datetime
     detail: Optional[str]
 
-
+    
 class MeasurementService:
     def __init__(self, repo: MeasurementRepository):
         self.repo = repo
