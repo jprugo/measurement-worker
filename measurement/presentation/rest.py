@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import csv
 
 from dependency_injector.wiring import Provide, inject
@@ -11,7 +11,6 @@ from measurement.application.use_case import MeasurementQueryUseCase, CreateMeas
 from measurement.domain.model.aggregate import Measure
 from shared_kernel.infra.container import AppContainer
 
-
 from datetime import datetime
 
 router = APIRouter(prefix="/measurement", tags=['measurement'])
@@ -23,7 +22,7 @@ def get_measurements(
     measure_type: MeasureType,
     start_date: datetime,
     end_date: datetime,
-    detail: str,
+    detail: Optional[str] = None,
     measurement_query: MeasurementQueryUseCase = Depends(Provide[AppContainer.measurement.query]),
 ) -> MeasurementResponse:
     request = GetMeasurementRequest(
