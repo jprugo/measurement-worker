@@ -1,5 +1,7 @@
 import enum
+from typing import List
 from shared_kernel.domain.value_object import ValueObject
+from measurement.domain.model.aggregate import Measure
 
 class AlarmType(ValueObject, str, enum.Enum):
     DESVEST = "DESVEST"
@@ -23,17 +25,19 @@ class AlarmTypeFactory:
 
 class LowerThanAlarmType(AlarmTypeBase):
     @staticmethod
-    def check(value: float, parametrized_value: float) -> bool:
-        return value < parametrized_value
+    def check(parametrized_value: float, measures: List[Measure]) -> bool:
+        return measures[-1] < parametrized_value
 
 
 class GreaterThanAlarmType(AlarmTypeBase):
     @staticmethod
-    def check(value: float, parametrized_value: float) -> bool:
-        return value > parametrized_value
+    def check(parametrized_value: float, measures: List[Measure]) -> bool:
+        return measures[-1] > parametrized_value
     
 
 class DesvestAlarmType(AlarmTypeBase):
     @staticmethod
-    def check(value: float, parametrized_value: float) -> bool:
-        return value > parametrized_value
+    def check(parametrized_value: float, measures: List[Measure]) -> bool:
+        last = measures[-1]
+        new_list = measures[-3:-1]
+        return any(x for x in new_list if abs(last - x) > parametrized_value)
