@@ -1,56 +1,44 @@
-from __future__ import annotations
-from shared_kernel.domain.value_object import ValueObject
 import enum
-from pydantic import BaseModel
 from typing import List
+from shared_kernel.domain.value_object import ValueObject
+from measurement.domain.model.aggregate import Measure
+
+class AlarmType(ValueObject, str, enum.Enum):
+    DESVEST = "DESVEST"
+    GREATER_THAN = "GREATER_THAN"
+    LOWER_THAN = "LOWER_THAN"
+
+class AlarmTypeBase():
+    pass
+
+class AlarmTypeFactory:
+    @staticmethod
+    def get_alarm(alarm_type: AlarmType):
+        if alarm_type == AlarmType.DESVEST:
+            return DesvestAlarmType()
+        elif alarm_type == AlarmType.GREATER_THAN:
+            return GreaterThanAlarmType()
+        elif alarm_type == AlarmType.LOWER_THAN:
+            return LowerThanAlarmType()
+        raise ValueError("Invalid alarm type")
+    
+
+class LowerThanAlarmType(AlarmTypeBase):
+    @staticmethod
+    def check(parametrized_value: float, measures: List[Measure]) -> bool:
+        return measures[-1] < parametrized_value
 
 
-class MeasureType(ValueObject, str, enum.Enum):
-    ISOLATION = "ISOLATION"
-    RESISTANCE = "RESISTANCE"
-    TEMPERATURE = "TEMPERATURE"
-    PRESSURE = "PRESSURE"
-    VIBRATION = "VIBRATION"
-    BATTERY = "BATTERY"
+class GreaterThanAlarmType(AlarmTypeBase):
+    @staticmethod
+    def check(parametrized_value: float, measures: List[Measure]) -> bool:
+        return measures[-1] > parametrized_value
+    
 
-
-class SensorType(ValueObject, str, enum.Enum):
-    ISO = "ISO"
-    RES = "RES"
-    WELL = "WELL"
-
-    def __init__(self, measure_types: List[MeasureType]):
-        self.measure_types = measure_types
-
-    @classmethod
-    def get_measure_types(cls, sensor_type):
-        if sensor_type == cls.ISO:
-            return [MeasureType.ISOLATION]
-        elif sensor_type == cls.RES:
-            return [MeasureType.RESISTANCE]
-        elif sensor_type == cls.WELL:
-            return [MeasureType.RESISTANCE, MeasureType.VIBRATION, MeasureType.TEMPERATURE]
-        else:
-            return []
-
-
-class MeasureDeviceResponse(ValueObject, BaseModel):
-    measures: List[DeviceMeasure]
-
-
-class DeviceMeasure(ValueObject, BaseModel):
-    value: float
-    measure_type: MeasureType
-    detail: str
-
-    @classmethod
-    def create(
-        cls, value: float, description: str, measure_type: MeasureType, detail: str
-    ) -> DeviceMeasure:
-        # Action
-        return cls(
-            value = value,
-            description= description,
-            measure_type= measure_type,
-            detail= detail
-        )
+class DesvestAlarmType(AlarmTypeBase):
+    @staticmethod
+    def check(parametrized_value: float, measures: List[Measure]) -> bool:
+        last = measures[-1]
+        new_list = measures[-3:-1]
+        return any(x for x in new_list if abs(last - x) > parametrized_value)
+            
