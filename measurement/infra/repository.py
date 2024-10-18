@@ -18,11 +18,10 @@ class MeasurementRepository(RDBRepository):
             Measure.created_at <= end_date,
         )
         
-        if detail is not None:
+        if detail is not None or detail != "":
             query = query.filter(Measure.detail == detail)
 
         return query.all()
-
 
 
     @staticmethod
