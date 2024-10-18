@@ -1,13 +1,14 @@
 from typing import  List
 import asyncio
 
+from measurement.domain.model.value_object import MeasureType
 from measurement.infra.api.device_api_service import DeviceApiService
+from measurement.domain.model.value_object import DeviceMeasure, SensorType
+from measurement.application.use_case import CreateMeasurementCommand, DeviceMeasurementQueryUseCase, CreateMeasurementRequest
+
 from worker.application.step_definition_use_case import StepDefinitionQueryUseCase
 from worker.domain.model.aggregate import StepDefinition
 from worker.domain.model.value_object import PositionType
-
-from measurement.domain.model.value_object import DeviceMeasure, SensorType
-from measurement.application.use_case import CreateMeasurementCommand, DeviceMeasurementQueryUseCase, CreateMeasurementRequest
 
 from alarming.application.use_case import AlarmDefinitionQueryUseCase, CreateAlarmCommand
 from alarming.domain.model.aggregate import AlarmDefinition
@@ -43,6 +44,16 @@ class WorkerService:
         # ALARM
         self.alarm_query = alarm_def_query
         self.alarm_command = alarm_command
+
+        # Custom
+        self.measures_dict = {
+            MeasureType.ISOLATION: [],
+            MeasureType.PRESSURE: [],
+            MeasureType.RESISTANCE: [],
+            MeasureType.TEMPERATURE: [],
+            MeasureType.VIBRATION: [],
+            MeasureType.BATTERY: []
+        }
 
     async def handle(self, event_manager: EventManager, position: PositionType):
         print(f"Handling position: {position}")
@@ -96,6 +107,7 @@ class WorkerService:
 
 
     def _register_measure(self, measure: DeviceMeasure):
+        self.measures_dict[measure.measure_type].append(measure.value)
         self.measurement_command.execute(
             CreateMeasurementRequest(
                 value=measure.value,
@@ -110,7 +122,7 @@ class WorkerService:
         if alarm_definitions:
             alarm_definition = alarm_definitions[0]
             alarm_type = AlarmTypeFactory.get_alarm(alarm_type=alarm_definition.alarm_type)
-            if alarm_type.check(value=measure.value, parametrized_value=alarm_definition.config_value):
+            if alarm_type.check(parametrized_value=alarm_definition.config_value, measures=self.measures_dict[measure.measure_type]):
                 self._trigger_alarm(alarm_definition=alarm_definition, measure_value= measure.value)
 
 
@@ -122,9 +134,10 @@ class WorkerService:
     
 
     def _reproduce(self, sound_path: str):
-        pygame.mixer.init()
-        pygame.mixer.music.load(sound_path)
-        pygame.mixer.music.play()
+        #pygame.mixer.init()
+        #pygame.mixer.music.load(sound_path)
+        #pygame.mixer.music.play()
+        print(f'Playing {sound_path}')
 
 
     def _save_alarm(self, alarm_definition: AlarmDefinition, measure_value: float):
