@@ -11,30 +11,19 @@ from drives.presentation import rest as drives_api
 from shared_kernel.infra.container import AppContainer
 from shared_kernel.infra.database.orm import init_orm_mappers
 
-# Strawberry - GraphQL
-import strawberry
-from strawberry.fastapi import GraphQLRouter
-#from measurement.presentation.graphql.core import Query, Mutation
-
 app_container = AppContainer()
 
 app = FastAPI(
     title="Measurement Worker",
     contact={
-        "name": "German Nino",
+        "name": "Gigawatt SAS",
         "email": "",
     },
 )
 
 app.container = app_container
 
-#schema = strawberry.Schema(query=Query, mutation=Mutation)
-#graphql_app = GraphQLRouter(schema)
-
-app = FastAPI()
-
-#app.include_router(graphql_app, prefix="/measurement", tags=['measurement'])
-
+# Configuración de CORS
 origins = ["*"] 
 
 app.add_middleware(
@@ -45,6 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Incluir routers
 app.include_router(measurement_api.router)
 app.include_router(configuration_api.router)
 app.include_router(alarming_api.router)

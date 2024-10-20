@@ -21,6 +21,5 @@ class ConfigurationResponse(BaseResponse):
     result: List[ConfigurationSchema]
 
 
-class SetUpResponse(BaseResponse):
-    voltage: int
-    alarma: int
+class SetUpResponse(BaseModel):
+    voltage: int    

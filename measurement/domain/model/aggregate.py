@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
 
@@ -12,11 +13,11 @@ class Measure(AggregateRoot):
     value: float
     created_at: datetime
     measure_type: MeasureType
-    detail: str
+    detail: Optional[str] = None
 
     @classmethod
     def create(
-        cls, value: float, measure_type: MeasureType, detail: str
+        cls, value: float, measure_type: MeasureType, detail: Optional[str] = None
     ) -> Measure:
         # Action
         return cls(

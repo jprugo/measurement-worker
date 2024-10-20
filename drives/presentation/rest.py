@@ -24,5 +24,6 @@ def _get_usb_drives() -> List[DriveSchema]:
            device=e.device,
            mountpoint=e.mountpoint
        ), result))
-    except:
+    except Exception as e:
+        print(e)
         return []

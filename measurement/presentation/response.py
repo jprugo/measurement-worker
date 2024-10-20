@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -12,7 +12,7 @@ class MeasurementSchema(BaseModel):
     value: float
     created_at: datetime
     measure_type: MeasureType
-    detail: str
+    detail: Optional[str] = None
 
     class Config:
         orm_mode = True

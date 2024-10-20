@@ -2,7 +2,7 @@ CREATE TABLE measures (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     value REAL NOT NULL,
     measure_type TEXT NOT NULL,
-    detail TEXT NOT NULL,
+    detail TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (id) -- Constraint equivalent to UniqueConstraint in SQLAlchemy
 );
@@ -48,5 +48,6 @@ CREATE TABLE step_definitions (
 );
 
 INSERT INTO configurations
-(id, name, value, treatment_as, created_at, updated_at)
-VALUES(4, 'DEVICE_IP', '192.168.1.1', 'STRING', '2024-10-11 20:04:44', '2024-10-11 20:04:44');
+(name, value, treatment_as, created_at, updated_at)
+VALUES('DEVICE_IP', '192.168.1.1', 'STRING', '2024-10-11 20:04:44', '2024-10-11 20:04:44');
+VALUES('isolationVoltage', '500', 'STRING', '2024-10-11 20:04:44', '2024-10-11 20:04:44');

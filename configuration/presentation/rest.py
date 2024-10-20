@@ -51,13 +51,14 @@ def update_configuration(
 ) -> None:
     command.execute(request=request)
 
-@router.put("/setup")
+@router.get("/setup")
 @inject
 def setup(
     configuration_query: ConfigurationQueryUseCase = Depends(Provide[AppContainer.configuration.query]),
 ) -> SetUpResponse:
     return SetUpResponse(
-        voltaje = configuration_query.get_configuration(request = GetConfigurationRequest(name='isolationVoltage'))
+        detail= "ok",
+        voltage = configuration_query.get_configuration(request = GetConfigurationRequest(name='isolationVoltage'))[0].value
     )
 
 
